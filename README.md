@@ -1,101 +1,120 @@
-# BookMyShow-Coldplay-TicketsScript
-This Script will allow you to buy tickets of coldplay as soon as the portal opens at september 22 12 pm ist.
-
-
-
-
-# Coldplay Concert Ticket Booking Automation
-
-## Overview
-This Python script automates the process of booking tickets for the **Coldplay "Music of the Spheres" World Tour** on BookMyShow. It navigates to the event page, selects seats, and simulates a real-world payment process. The script integrates multiple payment modes like **UPI**, **Credit/Debit Cards**, **Net Banking**, and **Wallets (Paytm, PhonePe, etc.)**, ensuring a seamless experience from booking to payment.
-
-The script is designed for users who want to **experience** an automated ticket booking workflow, useful for those familiar with Python and Selenium WebDriver.
-
----
+# ticketmaster
 
 ## Features
 
-- **Automatic Navigation to Event Page**:
-  - The script automatically navigates to the **Coldplay World Tour** event page on BookMyShow and maximizes the browser window for a smooth user experience.
+- Loads configuration from `config.json`
+- Spins up Selenium WebDriver instances based on configuration
+- Follows customizable steps for ticket booking
+- Handles multiple instances and synchronizes the payment process
+- Emits events via RabbitMQ when the payment page is reached
+- Graceful shutdown and cleanup on exit
+- Dockerized for easy setup and deployment
 
-- **Seat Selection Simulation**:
-  - Simulates the seat selection process for two tickets. You can easily modify the number of tickets and pricing in the script as needed.
+## Table of Contents
 
-- **Multiple Payment Methods**:
-  - Supports various payment options, including:
-    - **UPI** (Unified Payment Interface)
-    - **Credit/Debit Cards**
-    - **Net Banking**
-    - **Digital Wallets** (Paytm, PhonePe, etc.)
-
-- **Customizable**:
-  - The script is fully customizable, allowing adjustments to parameters like event URL, ticket price, and payment method options for different booking scenarios.
-
----
+1. [Requirements](#requirements)
+2. [Configuration](#configuration)
+3. [Running Locally](#running-locally)
+4. [Docker Setup](#docker-setup)
+5. [Usage](#usage)
+6. [License](#license)
 
 ## Requirements
 
-To run this script, the following software and dependencies must be installed:
+- Python 3.9+
+- Google Chrome
+- ChromeDriver
+- RabbitMQ (for event handling)
+- Docker (for containerized setup)
 
-### 1. Python
-Ensure Python 3.x is installed on your machine. You can download Python [here](https://www.python.org/downloads/).
+## Configuration
 
-### 2. Selenium WebDriver
-Install Selenium using pip:
-```bash
-pip install selenium
+The application uses a `config.json` file for defining the steps and preferences. Below is a sample `config.json`:
+
+```json
+{
+  "base_url": "https://example.com",
+  "number_of_instances": 10,
+  "steps": [
+    { "action": "click", "locator": { "type": "text", "value": "Book" } },
+    {
+      "action": "input",
+      "locator": { "type": "css", "value": ".ticket-class" },
+      "value": "2"
+    },
+    { "action": "click", "locator": { "type": "text", "value": "Proceed" } },
+    { "action": "wait", "time": 5 },
+    { "action": "click", "locator": { "type": "text", "value": "Payment" } }
+  ],
+  "payment_preferred_type": "upi"
+}
 ```
 
-### 3. Chrome and ChromeDriver
-Download **ChromeDriver** to match your version of Google Chrome. You can download it [here](https://sites.google.com/a/chromium.org/chromedriver/downloads). Make sure ChromeDriver is added to your system’s PATH or provide its location in the script.
+### Configurable Fields
 
----
+- `base_url`: The URL where the ticket booking process begins.
+- `number_of_instances`: Number of Selenium WebDriver instances to spin up.
+- `steps`: An array of steps that each driver will follow. The steps support actions like `click`, `input`, and `wait`.
+- `payment_preferred_type`: Preferred payment method (e.g., "upi").
 
-## Setup and Usage
+## Running Locally
 
 ### 1. Clone the Repository
-Clone the repository to your local machine using Git:
+
 ```bash
-git clone https://github.com/your-username/Coldplay-Ticket-Booking.git
+git clone https://github.com/your-username/ticket-booking-automation.git
+cd ticket-booking-automation
 ```
 
-### 2. Install Required Dependencies
-Navigate to the project directory and install the dependencies using pip:
+### 2. Install Python Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Setup ChromeDriver
-Download the correct version of ChromeDriver and ensure it’s properly configured in your system’s PATH, or modify the script to point to the path where it is located.
+### 3. Install ChromeDriver
 
-### 4. Run the Script
-Open a terminal, navigate to the project folder, and run the script:
+Ensure that `chromedriver` is installed and available in your system path. You can download it from [here](https://sites.google.com/chromium.org/driver/).
+
+### 4. Start RabbitMQ (Locally or via Docker)
+
+To run RabbitMQ locally, you can use Docker:
+
 ```bash
-python coldplay_booking.py
+docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 ```
 
-### 5. Follow On-Screen Prompts
-The script will guide you through the booking process, including ticket selection and payment.
+### 5. Run the Application
 
----
+```bash
+python main.py
+```
 
-## Customization
+## Docker Setup
 
-You can modify several aspects of the script to fit your needs:
+### 1. Build Docker Image
 
-- **Event URL**: Change the event URL to book tickets for another event.
-  ```python
-  driver.get("https://in.bookmyshow.com/events/coldplay-music-of-the-spheres-world-tour/ET00412466")
-  ```
+```bash
+docker build -t selenium-ticket-automation .
+```
 
-- **Ticket Price**: Adjust the total ticket price by modifying the following line:
-  ```python
-  print("Total price: ₹5000")
-  ```
+### 2. Run with Docker Compose
 
-- **Payment Methods**: You can customize the available payment methods or add more options by editing the `fake_payment_process()` function in the script.
+To easily manage RabbitMQ and the application, use `docker-compose`:
 
----
+```bash
+docker-compose up --build
+```
 
-## Disclaimer
-This script simulates the process of booking tickets and interacting with a payment gateway. It does not perform any real transactions. It is designed for automation demonstrations, testing, or practice purposes.
+This will build the Docker image, set up the necessary services (like RabbitMQ), and run the app.
+
+## Usage
+
+1. **Base URL:** The browser instances will start by navigating to the `base_url` defined in the `config.json`.
+2. **Following Steps:** Each instance will follow the sequence of actions defined in the `steps` array.
+3. **Payment Handling:** Once the first instance reaches the payment page, it will emit an event, and all other instances will be terminated.
+4. **Sleeping:** After payment initiation, the application sleeps for 60 minutes before gracefully terminating.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

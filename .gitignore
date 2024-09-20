@@ -1,0 +1,73 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# C extensions
+*.c
+
+# Package directories
+*.egg-info/
+.eggs/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environment
+venv/
+env/
+.venv/
+ENV/
+
+# macOS system files
+.DS_Store
+
+# Logs and database files
+*.log
+*.sqlite3
+
+# Environment variables
+.env
+
+# Python cache
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+
+# Selenium artifacts
+chromedriver.log
+chromedriver/
+
+# Webdriver Manager cache
+~/.wdm/
+
+# Docker
+.dockerignore
+# Ignore Docker volumes
+volumes/
+
+# Ignore Python egg files
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Pytest
+.pytest_cache/
+test_reports/
+
+# VS Code specific files
+.vscode/

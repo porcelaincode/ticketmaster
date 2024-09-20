@@ -1,0 +1,16 @@
+{
+  "base_url": "https://in.bookmyshow.com/events/coldplay-music-of-the-spheres-world-tour/ET00412466",
+  "number_of_instances": 10,
+  "steps": [
+    { "action": "click", "locator": { "type": "text", "value": "Book" } },
+    {
+      "action": "input",
+      "locator": { "type": "css", "value": ".ticket-class" },
+      "value": "4,500"
+    },
+    { "action": "click", "locator": { "type": "text", "value": "Proceed" } },
+    { "action": "wait", "time": 5 },
+    { "action": "click", "locator": { "type": "text", "value": "Payment" } }
+  ],
+  "payment_preferred_type": "upi"
+}
