@@ -2,6 +2,17 @@
   "base_url": "https://in.bookmyshow.com/events/coldplay-music-of-the-spheres-world-tour/ET00412466",
   "number_of_instances": 10,
   "steps": [
+    { "action": "click", "locator": { "type": "text", "value": "Mumbai" } },
+    { "action": "click", "locator": { "type": "text", "value": "Sign in" } },
+    {
+      "action": "input",
+      "locator": { "type": "css", "value": "#mobileNo" },
+      "value": "911157XXXX"
+    },
+    { "action": "click", "locator": { "type": "text", "value": "Continue" } },
+
+    { "action": "click", "locator": { "type": "text", "value": "Book" } },
+    { "action": "click", "locator": { "type": "text", "value": "Book" } },
     { "action": "click", "locator": { "type": "text", "value": "Book" } },
     {
       "action": "input",

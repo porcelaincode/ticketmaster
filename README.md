@@ -1,5 +1,9 @@
 # ticketmaster
 
+## ToDo
+
+- Handle authentication steps for multiple instances(otp login)(would have to manually authenticate all drivers maybe, tedious :/)
+
 ## Features
 
 - Loads configuration from `config.json`
@@ -62,8 +66,8 @@ The application uses a `config.json` file for defining the steps and preferences
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/ticket-booking-automation.git
-cd ticket-booking-automation
+git clone https://github.com/porcelaincode/ticketmaster.git
+cd ticketmaster
 ```
 
 ### 2. Install Python Dependencies
@@ -95,7 +99,7 @@ python main.py
 ### 1. Build Docker Image
 
 ```bash
-docker build -t selenium-ticket-automation .
+docker build -t ticketmaster .
 ```
 
 ### 2. Run with Docker Compose
